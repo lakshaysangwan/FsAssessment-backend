@@ -1,9 +1,11 @@
 package com.lakshay.FsAssignment.service;
 
+import com.lakshay.FsAssignment.entity.CheckCalls;
 import com.lakshay.FsAssignment.entity.User;
 import com.lakshay.FsAssignment.entity.UserDetails;
 import com.lakshay.FsAssignment.model.HomeResponse;
 import com.lakshay.FsAssignment.model.UserDetailsRequest;
+import com.lakshay.FsAssignment.repository.CheckCallsRepository;
 import com.lakshay.FsAssignment.repository.UserDetailsRepository;
 import com.lakshay.FsAssignment.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +21,8 @@ public class UserDetailsService {
     private UserDetailsRepository detailsRepository;
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private CheckCallsRepository checkCallsRepository;
 
     public ResponseEntity<HomeResponse> saveUser(UserDetailsRequest request) {
         User user = repository.getUserByUsername(request.getUsername());
@@ -42,5 +46,13 @@ public class UserDetailsService {
         } else {
             return new ResponseEntity<>(details, HttpStatus.ACCEPTED);
         }
+    }
+
+    public ResponseEntity<String> saveCall(String username) {
+        User user = repository.getUserByUsername(username);
+        if(user==null) new ResponseEntity<>("Invalid call", HttpStatus.NOT_ACCEPTABLE);
+        CheckCalls checkCalls = CheckCalls.builder().username(username).build();
+        checkCallsRepository.save(checkCalls);
+        return new ResponseEntity<>("Saved", HttpStatus.ACCEPTED);
     }
 }

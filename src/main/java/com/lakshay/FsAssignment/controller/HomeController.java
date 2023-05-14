@@ -9,6 +9,7 @@ import com.lakshay.FsAssignment.service.SignUpService;
 import com.lakshay.FsAssignment.service.UserDetailsService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,11 @@ public class HomeController {
     @GetMapping(value = "/{username}")
     public ResponseEntity<UserDetails> getUserDetails(@PathVariable String username, HttpServletRequest request) {
         return detailsService.getUser(username);
+    }
+
+    @PostMapping(value = "/{username}")
+    public ResponseEntity<String> saveRequest(@PathVariable String username, HttpServletRequest request) {
+        return detailsService.saveCall(username);
     }
 }
 
